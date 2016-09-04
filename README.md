@@ -1,6 +1,6 @@
 ## Nasdaq datapoints API
 
-## Setup
+# Setup
 
 Importing third party libraries:
 ```
@@ -12,7 +12,7 @@ Initilizing the database
 bin/gulp init-db
 ```
 
-Starting the api:
+# Starting the api:
 ```
 node index.js
 ```

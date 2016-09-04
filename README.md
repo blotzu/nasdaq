@@ -26,6 +26,11 @@ Initilizing the database
 bin/gulp init-db
 ```
 
+# Starting the scraper
+```
+bin/gulp scrape
+```
+
 # Starting the api:
 ```
 node index.js

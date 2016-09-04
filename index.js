@@ -1,7 +1,6 @@
 'use strict';
 
-// define the root path 
-GLOBAL['__commonPath'] = __dirname;
+require('./app/bootstrap.js');
 
 let imports = {
     'express' : require('express'),
@@ -11,6 +10,9 @@ let imports = {
 };
 
 let app = imports.express();
+
+// bind the service container to the app
+app.services = imports.services;
 
 // define the routes
 app.get('/v1/datapoints', (req, res) => {

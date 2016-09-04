@@ -1,6 +1,18 @@
 module.exports = {
-    'sqlite' : {
-        'filename' : 'data/data.db'
+    'db' : {
+        'client' : 'pg',
+        'connection': {
+            charset: 'utf8',
+            host : '127.0.0.1',
+            port : 5432,
+            user : 'nasdaq',
+            password : 'nasdaq',
+            database : 'nasdaq',
+        },
+        'pool' : {
+            'min' : 0,
+            'max' : 1,
+        },
     },
     'data' : {
         'source': {
@@ -11,6 +23,15 @@ module.exports = {
         }
     },
     'api' : {
-        'port' : 3000
+        'port' : 3000,
+        'defaultTimeInterval' : 2 * 60 * 60 // seconds
+    },
+    'entities' : {
+        'NasdaqValue' : {
+            'tableName' : 'nasdaq_values',
+        },
+        'NasdaqKey' : {
+            'tableName' : 'nasdaq_keys',
+        }
     }
 };

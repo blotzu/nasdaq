@@ -1,12 +1,14 @@
 'use strict';
 
+require('./app/bootstrap.js');
+
 let imports = {
     'gulp' : require('gulp'),
+    'child_process' : require('child_process'),
     'gulpUtil' : require('gulp-util'),
     'scrapy' : require('node-scrapy'),
     'services' : require('./app/services.js'),
 };
-
 
 // scrape nasdqa
 imports.gulp.task('scrape', () => {
@@ -14,7 +16,12 @@ imports.gulp.task('scrape', () => {
     let db = imports.services.db();    
     let dataInterval = imports.services.config()['data']['point']['interval'];
 
-    setInterval(() => {
+    let handler = () => {
+        let timeNow = (new Date()).getTime();
+        let timePoint = (timeNow - (timeNow % dataInterval)) / 1000;
+
+        imports.gulpUtil.log(`Starting scrape batch for timepoint ${timePoint}`);
+
         imports.scrapy.scrape(url, {
             'script' : {
                 selector: '#indexTable script'
@@ -51,11 +58,6 @@ imports.gulp.task('scrape', () => {
                 graphData[key] = value;
             }
 
-            imports.gulpUtil.log(graphData);
-
-            let timeNow = (new Date()).getTime();
-            let timePoint = (timeNow - (timeNow % dataInterval)) / 1000;
-
             let names = Object.keys(graphData);
             for (let name of names) {
                 // cleanup the name a bit;
@@ -65,43 +67,39 @@ imports.gulp.task('scrape', () => {
                     .replace(/(^[\-]+)|([\-]+)$/g, '');
 
                 // add the latest pretty names
-                db('nasdaq_keys')
-                    .insert({
-                        'key' : key,
-                        'name' : name
-                    }).catch(() => {
-                        return db('nasdaq_keys')
-                            .where('key', '=', key)
-                            .update({
-                                name: name,
-                            });
-                    });
-
+                imports.services.nasdaqKeyRepository()
+                // create the key
+                .upsert(key,name)
                 // add the data point
-                db('nasdaq_values').insert({
-                    "key": key,
-                    'time_point' : timePoint,
-                    'value' : graphData[name]
-                }).catch(() => {
-                    return db('nasdaq_values')
-                        .where('key', '=', key)
-                        .andWhere('time_point', '=', timePoint)
-                        .update({
-                            value: graphData[name],
-                        });
+                .then(() => {
+                    imports.gulpUtil.log(`Upserted ${key} = ${name} key`);
+
+                    return imports.services.nasdaqValueRepository()
+                    .upsert(key, timePoint, graphData[name]);
                 }).then(() => {
                     imports.gulpUtil.log(`Upserted ${key} = ${graphData[name]} as time point ${timePoint}`);
                 });
             }
         });
-    }, dataInterval / 2); // scrape twice as often as the data point interval - in order to avoid missing data points if the script takes too long
+    };
+
+    handler();
+    setInterval(handler, dataInterval / 2); // scrape twice as often as the data point interval - in order to avoid missing data points if the script takes too long
 });
 
-
-// scrape nasdqa
+// initialize the db schema
 imports.gulp.task('init-db', () => {
-    let db = imports.services.db();    
+    // create the db
+    let dbName = imports.services.config()['db']['connection']['database'];
+    let dbUser = imports.services.config()['db']['connection']['user'];
+    let dbPassword = imports.services.config()['db']['connection']['password'];
+    
+    // create the user
+    imports.child_process.execSync(`echo "create user ${dbUser} with password '${dbPassword}'" | psql -U postgres`);
+    imports.child_process.execSync(`createdb -U postgres --owner=${dbUser} ${dbName}`);
 
+    // create the tables
+    let db = imports.services.db();
     db.schema.createTableIfNotExists('nasdaq_keys', function(table) {
         table.string('key');
         table.string('name');
@@ -122,4 +120,3 @@ imports.gulp.task('init-db', () => {
         process.exit(0);
     });
 });
- 

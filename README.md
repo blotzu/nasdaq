@@ -28,3 +28,8 @@ bin/gulp init-db
 ```
 node index.js
 ```
+
+# Runnind the tests:
+```
+npm test
+```

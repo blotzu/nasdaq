@@ -144,7 +144,7 @@ module.exports = class DataPointsContoller extends imports.BaseController {
         return {
             'key' : nasdaqValue['key'],
             'name' : nasdaqKey['name'],
-            'time' : nasdaqValue['time_point'],
+            'time' : parseInt(nasdaqValue['time_point']),
             'value' : nasdaqValue['value'],
         };
     }

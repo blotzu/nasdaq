@@ -23,3 +23,5 @@ app.get('/v1/datapoints', (req, res) => {
 app.listen(imports.services.config()['api']['port'], () => {
   console.log(`Api up on port: ${imports.services.config()['api']['port']}!`);
 });
+
+module.exports = app;

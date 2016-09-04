@@ -1,11 +1,19 @@
 {
-  "dependencies": {
-    "express": "^4.14.0",
-    "gulp": "^3.9.1",
-    "http-status-codes": "^1.0.6",
-    "knex": "^0.11.10",
-    "node-scrapy": "^0.2.3",
-    "pg": "^4.5.5",
-    "sqlite3": "^3.1.4"
-  }
+    "dependencies": {
+        "express": "^4.14.0",
+        "gulp": "^3.9.1",
+        "http-status-codes": "^1.0.6",
+        "knex": "^0.11.10",
+        "node-scrapy": "^0.2.3",
+        "pg": "^4.5.5",
+        "sqlite3": "^3.1.4"
+    },
+    "devDependencies": {
+        "mocha": "^3.0.2",
+        "should": "^11.1.0",
+        "supertest": "^2.0.0"
+    },
+    "scripts" : {
+        "test" : "./bin/mocha --recursive ./tests/"
+    }
 }

@@ -122,7 +122,8 @@ module.exports = class DataPointsContoller extends imports.BaseController {
      * @returns int|null
      */
     validateArgumentTime(req, key) {
-        let value = req.query[key];
+        let query = req.query || {};
+        let value = query[key];
         if (value === undefined || value === '' || value === null) {
             return null;
         }
@@ -142,10 +143,10 @@ module.exports = class DataPointsContoller extends imports.BaseController {
      */
     formatResponseObject(nasdaqValue, nasdaqKey) {
         return {
-            'key' : nasdaqValue['key'],
-            'name' : nasdaqKey['name'],
-            'time' : parseInt(nasdaqValue['time_point']),
-            'value' : nasdaqValue['value'],
+            'key' : 'key' in nasdaqValue ? nasdaqValue['key'] : '',
+            'name' : 'name' in nasdaqKey ? nasdaqKey['name'] : '',
+            'time' : parseInt(nasdaqValue['time_point']) || 0,
+            'value' : parseFloat(nasdaqValue['value']) || 0,
         };
     }
 }

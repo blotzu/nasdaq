@@ -9,6 +9,7 @@
     "sqlite3": "^3.1.4"
   },
   "devDependencies": {
+    "leche": "^2.1.2",
     "mocha": "^3.0.2",
     "should": "^11.1.0",
     "sinon": "^1.17.5",

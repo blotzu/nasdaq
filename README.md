@@ -1,6 +1,6 @@
-## Nasdaq datapoints API
+# Nasdaq datapoints API
 
-# Setup
+## Setup
 
 Installing PostgreSQL
 
@@ -26,17 +26,17 @@ Initilizing the database
 bin/gulp init-db
 ```
 
-# Starting the scraper
+## Starting the scraper
 ```
 bin/gulp scrape
 ```
 
-# Starting the api:
+## Starting the api:
 ```
 node index.js
 ```
 
-# Runnind the tests:
+## Runnind the tests:
 ```
 npm test
 ```

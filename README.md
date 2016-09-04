@@ -35,3 +35,19 @@ node index.js
 ```
 npm test
 ```
+
+# Endpoints
+Getting data for one key ( the main nasdaq index ) for the last 30 min ( default )
+```
+http://localhost:3000/v1/datapoints?key=nasdaq
+```
+
+Getting data for one key ( the main nasdaq index ) for a specific time range
+```
+http://localhost:3000/v1/datapoints?key=nasdaq&time_start=1472982360&time_end=1472988360
+```
+
+Getting data for multiple keys
+```
+http://localhost:3000/v1/datapoints for the last 30 min ( default )
+```

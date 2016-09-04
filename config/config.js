@@ -24,7 +24,7 @@ module.exports = {
     },
     'api' : {
         'port' : 3000,
-        'defaultTimeInterval' : 2 * 60 * 60 // seconds
+        'defaultTimeInterval' : 30 * 60 * 60 // 30 min
     },
     'entities' : {
         'NasdaqValue' : {
